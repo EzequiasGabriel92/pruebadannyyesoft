@@ -1,0 +1,143 @@
+
+<!-- Filter Datatables -->
+<section id="ngx-datatable-filter">
+    <div class="row">
+      <div class="col-12">
+        <!-- Filter starts -->
+        <div class="users-list-filter px-2">
+          <form >
+            <div class="row border rounded py-2 mb-2 mx-n2">
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="users-list-verified">STATUS</label>
+                <fieldset class="form-group">
+                  <select id="users-list-verified" class="form-control" disabled>
+                    <option value="">Todos</option>
+                  </select>
+                </fieldset>
+              </div>
+  
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="users-list-role">CREADO POR
+                </label>
+                <fieldset class="form-group">
+                  <select id="users-list-role" class="form-control" disabled>
+                    <option value="">Todos</option>
+                  </select>
+                </fieldset>
+              </div>
+  
+              <div class="col-12 col-sm-6 col-lg-3">
+                <label for="users-list-status">ASIGNADO A</label>
+                <fieldset class="form-group">
+                  <select id="users-list-status" class="form-control" disabled>
+                    <option value="">Todos</option>
+                  </select>
+                </fieldset>
+              </div>
+  
+              <div class="col-12 col-sm-6 col-lg-3 d-flex align-items-center">
+              </div>
+            </div>
+          </form>
+        </div>
+        <!-- Filter ends -->
+      </div>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-content">
+            <div class="card-body">
+              <!-- ngx-datatable-filter -->
+              <fieldset class="form-group">
+                <label>Show
+                  <select name="users-list-select"
+                    class="form-control form-control-sm d-inline-block width-100 p-right-25 pl-4 mx-1"
+                    (click)="updateLimit($event)"
+                    >
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                  entries</label>
+                <label for="ngx-filter-ref" class="float-right">Search:
+                  <input id="ngx-filter-ref" class="form-control form-control-sm d-inline-block width-200 ml-1"
+                    type="text" (keyup)="filterUpdate($event)" />
+                </label>
+              </fieldset>
+              <ngx-datatable class="bootstrap core-bootstrap" [columnMode]="ColumnMode.force" [headerHeight]="50"
+                [footerHeight]="50" rowHeight="auto" [limit]="limitRef" [rows]="rows" [scrollbarH]="true"
+                [columns]="columns">
+                <ngx-datatable-column name="CORPORATIVO" prop="Username" [width]="150">
+                <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                    <div class="d-flex align-items-center">
+                        <div *ngIf="row.S_LogoURL; else customAvatar">
+                          <img class="rounded-circle mr-1" [src]="row.S_LogoURL"
+                            height="32" width="32" alt="datatable-avatar">
+                        </div>
+                        <ng-template #customAvatar>
+                          <div class="avatar mr-1 ml-0"
+                            [ngClass]="{'bg-primary': row.status == '1', 'bg-success':row.status == '2', 'bg-danger':row.status == '3' , 'bg-warning':row.status == '4', 'bg-info':row.status == '5'}  ">
+                            <div class="avatar-content">{{ row.S_NombreCorto}}</div>
+                          </div>
+                        </ng-template>
+                        <div class="cell-line-height">
+                          <a class="font-medium-1 line-height-1 mb-0" routerLink="/corporativos/detalle/{{row.id}}" routerLinkActive="router-link-active" >{{row.S_NombreCorto}}</a>
+                          <span class="text-muted font-small-2 d-block">
+                            {{ row.S_NombreCompleto }}</span>
+                        </div>
+                      </div>
+                </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Url" prop="S_SystemUrl" [width]="150">
+                  <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                    <div class="d-flex align-items-center">
+                      <a routerLink="devschoolcloud.com/sa/#/{{row.S_SystemUrl}}" routerLinkActive="router-link-active" >devschoolcloud.com/sa/#/{{row.S_SystemUrl}}</a>
+                      </div>
+                </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="INCORPORACIÓN" prop="D_FechaIncorporacion" [width]="120">
+                  <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                    <div class="d-flex align-items-center">
+                      <p>{{row.D_FechaIncorporacion | date:'dd-MMM-yyyy'}}</p>
+                      </div>
+                </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="CREADO EL" prop="D_FechaIncorporacion" [width]="120">
+                  <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                    <div class="d-block">
+                      <p class="">{{row.D_FechaIncorporacion | date:'dd-MMM-yyyy'}}</p>
+                      <p class="">por {{row.user_created.S_Nombre}}</p>
+                      </div>
+                </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="ASIGNADO A" prop="D_FechaIncorporacion" [width]="120">
+                  <ng-template let-row="row" let-name="value" ngx-datatable-cell-template>
+                    <div class="d-flex align-items-center">
+                      <p>{{row.asignado.S_Nombre}}</p>
+                      </div>
+                </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Status" prop="S_Activo" [width]="70">
+                    <ng-template let-status="value" ngx-datatable-cell-template>
+                      <div class="badge" [ngClass]="{
+                          'bg-light-success': status == 1                          
+                        }">
+                        <p class="m-0" *ngIf="status === 1" >Activo</p>
+                        <p class="m-0" *ngIf="status === 2">Inactivo</p>
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+                <ngx-datatable-column name="Acciones" [width]="50">
+                  <ng-template ngx-datatable-cell-template let-row="row">
+                    <a  routerLink="/corporativos/detalle/{{row.id}}" ><i class="ft-eye text-primary cursor-pointer"></i></a>
+                    <i class="ft-check-circle ml-2 cursor-pointer"></i>
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+              <!-- ngx-datatable-filter -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
